@@ -3,13 +3,20 @@
   action: >
     {{ ansible_pkg_mgr }}
     name='sudo'
-    state='installed'
+    state='present'
 
-- name: Admin sudoers
-  template:
-    src: 'sudo_administrators.j2'
-    dest: '/etc/sudoers.d/administrators'
+
+- name: Add sudoers NOPASSWD for users
+  lineinfile:
+    path: '/etc/sudoers.d/{{ item.name }}'
+    state: present
+    create: yes
+    line: "{{ item.name + ' ALL=(ALL) NOPASSWD: ALL' }}"
     owner: 'root'
     group: 'root'
-    mode: '0440'
-  when: users_manage_admin_sudoers == true
+    mode: '0600'
+    validate: /usr/sbin/visudo -cf %s
+  with_items: "{{ users }}"
+  when: >
+    item.sudo_nopasswd is defined and
+    item.sudo_nopasswd == true

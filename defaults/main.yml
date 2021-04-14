@@ -10,9 +10,10 @@ users_per_user_groups: yes
 users_manage_admin_sudoers: yes
 # If true, assume the admin group is also used to run Ansible jobs. This
 # disables requiretty for the admin group
-users_admin_uses_ansible: yes
+# niklep comment: I set it to NO, better fix it and sudoers template
+users_admin_uses_ansible: no
 # If set to true, require a password for sudo, false to not require a password
-users_admin_sudo_password: yes
+#users_admin_sudo_password: yes
 
 users_admin_group: wheel
 users_default_password: '!!'
